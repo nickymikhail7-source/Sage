@@ -181,8 +181,8 @@ export function Dashboard({ initialEmails, accessToken }: { initialEmails: any[]
                     </div>
                 )}
 
-                {/* AI Bar Floating at bottom */}
-                <AIBar />
+
+                {/* AI Bar Removed - Now unified in ThreadView */}
             </div>
 
             <ComposeDrawer
