@@ -22,7 +22,17 @@ export function extractHtmlBody(email: any): string {
     }
 
     // 4. Fallback to text body converted to HTML
-    const textContent = email.textBody || email.body?.content || email.snippet || '';
+    let textContent = email.textBody || email.snippet || '';
+
+    // Check if 'body' is string (common Aurinko text body) or object
+    if (!textContent && email.body) {
+        if (typeof email.body === 'string') {
+            textContent = email.body;
+        } else if (email.body.content) {
+            textContent = email.body.content;
+        }
+    }
+
     if (textContent) {
         return convertTextToHtml(textContent);
     }
