@@ -141,12 +141,28 @@ h2 {
   margin-bottom: 1em;
 }
 
+/* Images - Critical styles */
 .email-body-content img {
   max-width: 100% !important;
   height: auto !important;
-  display: block;
-  margin: 12px 0;
-  border-radius: 8px;
+  display: inline-block;
+  margin: 8px 0;
+  border-radius: 4px;
+}
+
+/* Handle CID images (embedded images) */
+.email-body-content img[src^="cid:"] {
+  display: none;
+  /* Hide CID images that can't load without backend proxy */
+}
+
+/* Handle tracking pixels - hide them */
+.email-body-content img[width="1"],
+.email-body-content img[height="1"],
+.email-body-content img[src*="track"],
+.email-body-content img[src*="pixel"],
+.email-body-content img[src*="open"] {
+  display: none !important;
 }
 
 .email-body-content a {

@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { Sparkles, Loader2, ChevronDown, ChevronUp, Archive, Reply as ReplyIcon, Forward, Clock, Calendar, Send, Mic } from 'lucide-react';
 import { fetchThreadAction } from '@/app/actions';
 import { useVoiceInput } from '@/hooks/useVoiceInput';
+import { EmailBodyRenderer } from '@/components/EmailBodyRenderer';
+import { extractHtmlBody } from '@/lib/email-utils';
 
 interface ThreadViewProps {
     threadId: string | null;
@@ -285,9 +287,9 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                                     {/* HTML Body */}
                                     {isExpanded && (
                                         <div className="px-4 pb-6 pl-[4.5rem]">
-                                            <div
-                                                className="email-body-content prose prose-invert max-w-none"
-                                                dangerouslySetInnerHTML={{ __html: msg.bodyHtml || msg.body || msg.snippet }}
+                                            <EmailBodyRenderer
+                                                html={extractHtmlBody(msg)}
+                                                className="text-zinc-300"
                                             />
                                         </div>
                                     )}
@@ -306,8 +308,8 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                         <button
                             onClick={() => setMode('reply')}
                             className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${mode === 'reply'
-                                    ? 'bg-zinc-800 text-zinc-100 border border-zinc-700'
-                                    : 'text-zinc-500 hover:text-zinc-300'
+                                ? 'bg-zinc-800 text-zinc-100 border border-zinc-700'
+                                : 'text-zinc-500 hover:text-zinc-300'
                                 }`}
                         >
                             Reply
@@ -315,8 +317,8 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                         <button
                             onClick={() => setMode('ai')}
                             className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${mode === 'ai'
-                                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20'
-                                    : 'text-zinc-500 hover:text-zinc-300'
+                                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20'
+                                : 'text-zinc-500 hover:text-zinc-300'
                                 }`}
                         >
                             ✨ Ask Sage
@@ -352,8 +354,8 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                             onClick={toggleListening}
                             disabled={isAiProcessing}
                             className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all flex-shrink-0 ${isListening
-                                    ? 'bg-emerald-500 text-white animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.5)]'
-                                    : 'bg-zinc-800 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700'
+                                ? 'bg-emerald-500 text-white animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.5)]'
+                                : 'bg-zinc-800 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700'
                                 }`}
                         >
                             {isVoiceProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Mic className="w-5 h-5" />}

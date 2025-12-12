@@ -14,7 +14,14 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; img-src 'self' data: https: http:; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline';",
+            value: [
+              "default-src 'self'",
+              "img-src 'self' data: https: http: blob:",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+              "style-src 'self' 'unsafe-inline'",
+              "font-src 'self' data:",
+              "connect-src 'self' https://api.aurinko.io https://api.openai.com",
+            ].join('; '),
           },
         ],
       },
