@@ -3,7 +3,7 @@ import { getOpenAIClient } from '@/lib/openai';
 
 export async function POST(req: Request) {
     try {
-        const { emailBody } = await req.json();
+        const { emailBody, subject } = await req.json();
 
         if (!emailBody) {
             return NextResponse.json({ error: 'No email body provided' }, { status: 400 });
@@ -26,7 +26,7 @@ CRITICAL RULES:
                 },
                 {
                     role: 'user',
-                    content: emailBody,
+                    content: `Subject: ${subject || 'No Subject'}\n\n${emailBody}`,
                 },
             ],
             response_format: { type: "json_object" },
