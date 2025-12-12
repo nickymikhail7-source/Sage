@@ -356,6 +356,8 @@ button:active,
 }
 
 /* Voice orb pulsing when active */
+
+/* Voice button pulse animation */
 @keyframes voicePulse {
 
   0%,
@@ -368,6 +370,23 @@ button:active,
   }
 }
 
-.voice-active {
+.voice-listening {
   animation: voicePulse 1.5s ease-in-out infinite;
+}
+
+/* Recording indicator */
+@keyframes recording {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.recording-indicator {
+  animation: recording 1s ease-in-out infinite;
 }

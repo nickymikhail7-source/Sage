@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Sparkles, Loader2, ChevronDown, ChevronUp, Archive, Reply as ReplyIcon, Forward, Clock, Calendar, Send, Mic } from 'lucide-react';
+import { Sparkles, Loader2, ChevronDown, ChevronUp, Archive, Reply as ReplyIcon, Forward, Clock, Calendar, Send } from 'lucide-react';
 import { fetchThreadAction } from '@/app/actions';
-import { useVoiceInput } from '@/hooks/useVoiceInput';
 import { EmailBodyRenderer } from '@/components/EmailBodyRenderer';
 import { extractHtmlBody } from '@/lib/email-utils';
+import { VoiceButton } from '@/components/VoiceButton';
 
 interface ThreadViewProps {
     threadId: string | null;
@@ -26,14 +26,29 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
     const [inputText, setInputText] = useState('');
     const [isAiProcessing, setIsAiProcessing] = useState(false);
 
-    // Voice Hook
-    const handleVoiceTranscript = (text: string) => {
-        setInputText(text);
-        // Automatically switch to AI mode if it sounds like a command? 
-        // For now, let user decide context or straightforward input
+    const handleVoiceCommand = (action: string) => {
+        console.log('Voice Command Action:', action);
+        switch (action) {
+            case 'reply':
+                setMode('reply');
+                // document.getElementById('unified-input')?.focus(); // Ideal but using state is enough for now
+                break;
+            case 'compose':
+                setMode('reply'); // Reuse reply mode for now
+                break;
+            case 'archive':
+                // Implement archive logic
+                alert('Archived (Simulated)');
+                break;
+            default:
+                break;
+        }
     };
 
-    const { isListening, isProcessing: isVoiceProcessing, toggleListening } = useVoiceInput(handleVoiceTranscript);
+    const handleVoiceDraft = (draft: string) => {
+        setInputText(draft);
+        setMode('reply');
+    };
 
     const generateSummary = useCallback(async (msgs: any[]) => {
         setSummarizing(true);
@@ -340,7 +355,7 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                                 value={inputText}
                                 onChange={(e) => setInputText(e.target.value)}
                                 placeholder={mode === 'reply' ? 'Write your reply...' : 'Ask Sage anything...'}
-                                disabled={isAiProcessing || isVoiceProcessing}
+                                disabled={isAiProcessing}
                                 rows={2}
                                 className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500 resize-none disabled:opacity-50"
                             />
@@ -358,21 +373,20 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                         </div>
 
                         {/* Voice Button */}
-                        <button
-                            onClick={toggleListening}
-                            disabled={isAiProcessing}
-                            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all flex-shrink-0 ${isListening
-                                ? 'bg-emerald-500 text-white animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.5)]'
-                                : 'bg-zinc-800 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700'
-                                }`}
-                        >
-                            {isVoiceProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Mic className="w-5 h-5" />}
-                        </button>
+                        <VoiceButton
+                            onCommand={handleVoiceCommand}
+                            onDraft={handleVoiceDraft}
+                            context={{
+                                sender: messages[0]?.from?.name || messages[0]?.from?.address,
+                                subject: messages[0]?.subject,
+                                preview: messages[0]?.snippet,
+                            }}
+                        />
 
                         {/* Send Button */}
                         <button
                             onClick={handleUnifiedSubmit}
-                            disabled={!inputText.trim() || isAiProcessing || isVoiceProcessing}
+                            disabled={!inputText.trim() || isAiProcessing}
                             className="w-12 h-12 rounded-xl bg-emerald-500 hover:bg-emerald-600 disabled:bg-zinc-800 disabled:text-zinc-600 text-white flex items-center justify-center transition-colors flex-shrink-0"
                         >
                             {isAiProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
