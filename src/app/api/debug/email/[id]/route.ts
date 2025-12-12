@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export async function GET(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     // Use a hardcoded token for debugging or try to grab from header if passed
     // WARNING: In production this is insecure. For dev tool usage only.
