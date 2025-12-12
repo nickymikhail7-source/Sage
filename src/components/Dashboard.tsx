@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { EmailMessage } from '@/lib/aurinko';
 import { ThreadView } from '@/components/ThreadView';
-import { ComposeDrawer } from '@/components/ComposeDrawer';
+import { ComposeModal } from '@/components/ComposeModal';
 import { AIBar } from '@/components/AIBar';
 import { Plus, Search } from 'lucide-react';
 
@@ -182,14 +182,11 @@ export function Dashboard({ initialEmails, accessToken }: { initialEmails: any[]
                 )}
 
 
-                {/* AI Bar Removed - Now unified in ThreadView */}
             </div>
 
-            <ComposeDrawer
+            <ComposeModal
                 isOpen={isComposeOpen}
                 onClose={() => setIsComposeOpen(false)}
-                initialDraft={draftData}
-                onSend={handleSend}
             />
         </div>
     );
