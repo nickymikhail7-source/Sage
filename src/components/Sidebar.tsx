@@ -4,6 +4,7 @@ import { LayoutDashboard, Mail, Settings, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { clsx } from 'clsx';
+import { LoginButton } from './LoginButton';
 
 const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
@@ -43,6 +44,10 @@ export function Sidebar() {
                     );
                 })}
             </nav>
+
+            <div className="w-full px-4 mb-4">
+                <LoginButton />
+            </div>
         </aside>
     );
 }

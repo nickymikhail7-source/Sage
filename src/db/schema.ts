@@ -10,7 +10,8 @@ export const users = pgTable('users', {
 export const emailAccounts = pgTable('email_accounts', {
   id: uuid('id').defaultRandom().primaryKey(),
   userId: uuid('user_id').references(() => users.id).notNull(),
-  provider: text('provider').notNull(), // e.g., 'gmail'
+  accountId: text('account_id').notNull().unique(), // Aurinko Account ID
+  provider: text('provider').default('Aurinko'),
   emailAddress: text('email_address').notNull(),
   accessToken: text('access_token').notNull(),
   refreshToken: text('refresh_token'),
