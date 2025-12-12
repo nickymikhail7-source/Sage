@@ -252,10 +252,17 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                                 <div
                                     key={msg.id}
                                     className={`
+                                        rounded-xl border transition-all duration-200 overflow-hidden
+                                        ${isExpanded ? 'bg-zinc-900/30 border-zinc-800' : 'bg-transparent border-transparent hover:bg-zinc-900/50 cursor-pointer'}
+                                    `}
+                                    onClick={() => !isExpanded && toggleMessage(msg.id)}
+                                >
                                     <div className="flex items-start gap-4 p-4">
                                         <div className={`
                                             w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium flex-shrink-0
-                                    ${isExpanded ? 'bg-gradient-to-br from-zinc-700 to-zinc-600 text-zinc-100 border border-white/10' : 'bg-zinc-800 text-zinc-500'}
+                                            ${isExpanded ? 'bg-gradient-to-br from-zinc-700 to-zinc-600 text-zinc-100 border border-white/10' : 'bg-zinc-800 text-zinc-500'}
+                                        `}>
+                                            ${isExpanded ? 'bg-gradient-to-br from-zinc-700 to-zinc-600 text-zinc-100 border border-white/10' : 'bg-zinc-800 text-zinc-500'}
                                         `}>
                                             {(msg.from?.name || '?').charAt(0).toUpperCase()}
                                         </div>
@@ -263,7 +270,7 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center justify-between mb-1">
                                                 <div className="flex items-center gap-2">
-                                                    <span className={`text - sm font - medium ${ isExpanded ? 'text-zinc-100' : 'text-zinc-400' } `}>
+                                                    <span className={`text - sm font - medium ${isExpanded ? 'text-zinc-100' : 'text-zinc-400'} `}>
                                                         {msg.from?.name}
                                                     </span>
                                                     <span className="text-xs text-zinc-500 hidden sm:inline">&lt;{msg.from?.address}&gt;</span>
@@ -312,21 +319,19 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                     <div className="flex items-center gap-2 mb-3">
                         <button
                             onClick={() => setMode('reply')}
-                            className={`px - 3 py - 1 text - xs font - medium rounded - full transition - colors ${
-                                mode === 'reply'
-                                ? 'bg-zinc-800 text-zinc-100 border border-zinc-700'
-                                : 'text-zinc-500 hover:text-zinc-300'
-                            } `}
+                            className={`px - 3 py - 1 text - xs font - medium rounded - full transition - colors ${mode === 'reply'
+                                    ? 'bg-zinc-800 text-zinc-100 border border-zinc-700'
+                                    : 'text-zinc-500 hover:text-zinc-300'
+                                } `}
                         >
                             Reply
                         </button>
                         <button
                             onClick={() => setMode('ai')}
-                            className={`px - 3 py - 1 text - xs font - medium rounded - full transition - colors ${
-                                mode === 'ai'
-                                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20'
-                                : 'text-zinc-500 hover:text-zinc-300'
-                            } `}
+                            className={`px - 3 py - 1 text - xs font - medium rounded - full transition - colors ${mode === 'ai'
+                                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20'
+                                    : 'text-zinc-500 hover:text-zinc-300'
+                                } `}
                         >
                             ✨ Ask Sage
                         </button>
@@ -360,11 +365,10 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                         <button
                             onClick={toggleListening}
                             disabled={isAiProcessing}
-                            className={`w - 12 h - 12 rounded - xl flex items - center justify - center transition - all flex - shrink - 0 ${
-                                isListening
+                            className={`w - 12 h - 12 rounded - xl flex items - center justify - center transition - all flex - shrink - 0 ${isListening
                                     ? 'bg-emerald-500 text-white animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.5)]'
                                     : 'bg-zinc-800 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700'
-                            } `}
+                                } `}
                         >
                             {isVoiceProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Mic className="w-5 h-5" />}
                         </button>
@@ -390,11 +394,10 @@ function ActionButton({ icon, label, onClick, variant = 'default' }: { icon: any
             onClick={onClick}
             className={`
                 flex items - center gap - 2 px - 3 py - 2 rounded - lg text - xs font - medium transition - all
-                ${
-                                variant === 'primary'
-                                ? 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 border border-emerald-500/20'
-                                : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200 border border-transparent'
-                            }
+                ${variant === 'primary'
+                    ? 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 border border-emerald-500/20'
+                    : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200 border border-transparent'
+                }
                             `}
         >
             {icon}
