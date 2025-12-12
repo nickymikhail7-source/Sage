@@ -21,26 +21,33 @@ export async function POST(req: Request) {
             messages: [
                 {
                     role: 'system',
-                    content: `You are an email assistant. Summarize emails in EXACTLY 3 bullet points:
-- Point 1: What is this email about (one sentence)
-- Point 2: Key information or details (one sentence)
-- Point 3: Action required or next steps (or "No action required")
+                    content: `You are an email assistant. 
+1. Summarize emails in EXACTLY 3 bullet points.
+2. Categorize the email: "decision" (needs response), "fyi" (informational), "gatekeeper" (automated/newsletter).
 
-Always use bullet points (•). Keep each point under 15 words. Be concise.`
+Respond in this JSON format:
+{
+  "summary": ["bullet 1", "bullet 2", "bullet 3"],
+  "category": "decision" | "fyi" | "gatekeeper"
+}`
                 },
                 {
                     role: 'user',
-                    content: `Summarize this email:\n\nSubject: ${subject || 'No Subject'}\n\n${emailBody}`
+                    content: `Analyze this email:\n\nSubject: ${subject || 'No Subject'}\n\n${emailBody}`
                 },
             ],
+            response_format: { type: "json_object" },
             max_tokens: 200,
         });
 
-        const summary = response.choices[0].message.content || 'Could not generate summary';
-        console.log('✅ Summary generated:', summary);
+        const content = response.choices[0].message.content;
+        if (!content) throw new Error("No content generated");
 
-        // Return simple object with scalar string
-        return NextResponse.json({ summary });
+        const data = JSON.parse(content);
+        console.log('✅ Summary & Category generated:', data);
+
+        // Return structured object
+        return NextResponse.json(data);
 
     } catch (error) {
         console.error('❌ Summarize error:', error);
