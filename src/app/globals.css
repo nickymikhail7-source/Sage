@@ -128,38 +128,39 @@ h2 {
 
 /* Email body content styles */
 /* Email body content styles */
-/* Email Body Content - Force readable colors */
+/* ========================================
+   EMAIL BODY CONTENT - FORCE READABLE COLORS
+   ======================================== */
+
 .email-body-content {
   color: #e4e4e7 !important;
-  /* zinc-200 - always light text */
   font-size: 14px;
   line-height: 1.7;
   background: transparent !important;
-  max-width: 100%;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
 }
 
 /* Override ALL text colors inside email content */
 .email-body-content * {
   color: inherit !important;
-  background-color: transparent !important;
-  max-width: 100%;
 }
 
-/* But preserve colored links */
+/* Remove background colors that make text unreadable */
+.email-body-content *:not(img) {
+  background-color: transparent !important;
+}
+
+/* Preserve link colors - make them stand out */
 .email-body-content a {
   color: #10b981 !important;
-  /* emerald-500 */
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .email-body-content a:hover {
   color: #34d399 !important;
-  /* emerald-400 */
 }
 
-/* Images should keep their backgrounds */
+/* Images keep white background for logos/graphics */
 .email-body-content img {
   max-width: 100% !important;
   height: auto !important;
@@ -167,10 +168,10 @@ h2 {
   margin: 12px auto;
   border-radius: 8px;
   background-color: white !important;
-  /* Keep white bg for logos */
+  padding: 4px;
 }
 
-/* Handle CID images and Tracking Pixels */
+/* Handle CID images and Tracking Pixels - hide them */
 .email-body-content img[src^="cid:"],
 .email-body-content img[width="1"],
 .email-body-content img[height="1"],
@@ -180,26 +181,7 @@ h2 {
   display: none !important;
 }
 
-/* Tables - common in HTML emails */
-.email-body-content table {
-  max-width: 100% !important;
-  border-collapse: collapse;
-  background: transparent !important;
-  display: block;
-  overflow-x: auto;
-  margin: 12px 0;
-}
-
-.email-body-content td,
-.email-body-content th {
-  color: #e4e4e7 !important;
-  padding: 8px;
-  background: transparent !important;
-  border-color: #3f3f46 !important;
-  /* zinc-700 */
-}
-
-/* Headers */
+/* Headers - slightly brighter */
 .email-body-content h1,
 .email-body-content h2,
 .email-body-content h3,
@@ -207,9 +189,9 @@ h2 {
 .email-body-content h5,
 .email-body-content h6 {
   color: #fafafa !important;
-  /* zinc-50 - brighter for headings */
   margin-top: 1em;
   margin-bottom: 0.5em;
+  font-weight: 600;
 }
 
 /* Paragraphs */
@@ -223,12 +205,24 @@ h2 {
 .email-body-content ol {
   padding-left: 24px;
   margin-bottom: 1em;
-  color: #e4e4e7 !important;
 }
 
 .email-body-content li {
   margin-bottom: 4px;
   color: #e4e4e7 !important;
+}
+
+/* Tables */
+.email-body-content table {
+  max-width: 100% !important;
+  border-collapse: collapse;
+}
+
+.email-body-content td,
+.email-body-content th {
+  color: #e4e4e7 !important;
+  padding: 8px;
+  vertical-align: top;
 }
 
 /* Blockquotes */
@@ -240,39 +234,55 @@ h2 {
   font-style: italic;
 }
 
-/* Pre-formatted text */
-.email-body-content pre,
-.email-body-content code {
-  background: #27272a !important;
-  color: #e4e4e7 !important;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-family: monospace;
-}
-
-/* HR dividers */
+/* Dividers */
 .email-body-content hr {
   border: none;
   border-top: 1px solid #3f3f46;
   margin: 16px 0;
 }
 
-/* Force white background for email wrapper divs that contain images/logos */
-.email-body-content>table,
-.email-body-content>div>table {
-  background: transparent !important;
+/* Code blocks */
+.email-body-content pre,
+.email-body-content code {
+  background: #27272a !important;
+  color: #e4e4e7 !important;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
 }
 
-/* Special handling for email templates with colored backgrounds */
-.email-body-content [style*="background"] {
-  background: transparent !important;
+/* Strong/Bold text */
+.email-body-content strong,
+.email-body-content b {
+  color: #fafafa !important;
+  font-weight: 600;
 }
 
-/* But keep image containers that might need white bg */
-.email-body-content [style*="background"] img {
-  background: white !important;
-  padding: 8px;
-  border-radius: 8px;
+/* Italic text */
+.email-body-content em,
+.email-body-content i {
+  color: #d4d4d8 !important;
+}
+
+/* Small/muted text */
+.email-body-content small,
+.email-body-content .footer,
+.email-body-content [style*="font-size: 10"],
+.email-body-content [style*="font-size: 11"],
+.email-body-content [style*="font-size:10"],
+.email-body-content [style*="font-size:11"] {
+  color: #a1a1aa !important;
+}
+
+/* Spans that might have inline colors */
+.email-body-content span {
+  color: inherit !important;
+}
+
+/* Divs that might have inline colors */
+.email-body-content div {
+  color: inherit !important;
 }
 
 /* Animations */
