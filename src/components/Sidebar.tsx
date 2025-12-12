@@ -1,53 +1,71 @@
 'use client';
 
-import { LayoutDashboard, Mail, Settings, User } from 'lucide-react';
-import Link from 'next/link';
+import { Inbox, Calendar, Users, Send, Settings, Leaf } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { clsx } from 'clsx';
+import Link from 'next/link';
 import { LoginButton } from './LoginButton';
 
 const navItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', href: '/' },
-    { icon: Mail, label: 'Inbox', href: '/inbox' },
-    { icon: User, label: 'Contacts', href: '/contacts' },
-    { icon: Settings, label: 'Settings', href: '/settings' },
+    { icon: Inbox, label: 'Inbox', href: '/', badge: 0 },
+    { icon: Calendar, label: 'Calendar', href: '/calendar' },
+    { icon: Users, label: 'Contacts', href: '/contacts' },
+    { icon: Send, label: 'Sequences', href: '/sequences' },
 ];
 
 export function Sidebar() {
+    return (
+        <nav className="w-16 h-screen bg-zinc-950 border-r border-zinc-800 flex flex-col items-center py-4 flex-shrink-0 z-50">
+            {/* Logo */}
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-8">
+                <Leaf className="w-5 h-5 text-emerald-500" />
+            </div>
+
+            {/* Navigation items */}
+            <div className="flex flex-col items-center gap-1 flex-1 w-full px-2">
+                {navItems.map((item) => (
+                    <NavItem key={item.href} item={item} />
+                ))}
+            </div>
+
+            {/* Login / Settings */}
+            <div className="flex flex-col gap-4 items-center mb-4">
+                {/* Reusing LoginButton logic but minimal style */}
+                <div className="scale-75 origin-bottom">
+                    <LoginButton />
+                </div>
+
+                <button className="w-10 h-10 rounded-xl hover:bg-zinc-800 flex items-center justify-center text-zinc-500 hover:text-zinc-300 transition-colors">
+                    <Settings className="w-5 h-5" />
+                </button>
+            </div>
+        </nav>
+    );
+}
+
+function NavItem({ item }: { item: any }) {
     const pathname = usePathname();
+    const isActive = pathname === item.href;
 
     return (
-        <aside className="fixed left-0 top-0 h-screen w-20 flex flex-col items-center py-8 border-r border-white/5 bg-zinc-950/80 backdrop-blur-xl z-50">
-            <div className="mb-12">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-emerald-500 shadow-[0_0_20px_rgba(168,85,247,0.4)]" />
-            </div>
+        <Link
+            href={item.href}
+            className={`
+        relative w-10 h-10 rounded-xl flex items-center justify-center transition-colors
+        ${isActive
+                    ? 'bg-zinc-800 text-emerald-500'
+                    : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/50'
+                }
+      `}
+            title={item.label}
+        >
+            <item.icon className="w-5 h-5" />
 
-            <nav className="flex-1 flex flex-col gap-6 w-full px-4">
-                {navItems.map((item) => {
-                    const isActive = pathname === item.href;
-                    return (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className={clsx(
-                                "flex items-center justify-center p-3 rounded-xl transition-all duration-300 group relative",
-                                isActive
-                                    ? "bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]"
-                                    : "text-zinc-500 hover:text-white hover:bg-white/5"
-                            )}
-                        >
-                            <item.icon className="w-6 h-6" strokeWidth={1.5} />
-                            {isActive && (
-                                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-purple-500 rounded-l-full blur-[2px]" />
-                            )}
-                        </Link>
-                    );
-                })}
-            </nav>
-
-            <div className="w-full px-4 mb-4">
-                <LoginButton />
-            </div>
-        </aside>
+            {/* Badge for unread count */}
+            {item.badge > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 text-white text-xs font-medium rounded-full flex items-center justify-center">
+                    {item.badge > 99 ? '99+' : item.badge}
+                </span>
+            )}
+        </Link>
     );
 }
