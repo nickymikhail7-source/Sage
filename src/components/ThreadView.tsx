@@ -14,7 +14,7 @@ interface ThreadViewProps {
 export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) {
     const [messages, setMessages] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [summary, setSummary] = useState<string[] | null>(null);
+    const [summary, setSummary] = useState<string | null>(null);
     const [summarizing, setSummarizing] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
@@ -40,6 +40,7 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
             if (!res.ok) throw new Error("API Error");
 
             const data = await res.json();
+            console.log('📩 Summary API response:', data);
 
             if (data.summary) {
                 setSummary(data.summary);
@@ -48,7 +49,6 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
             }
         } catch (err) {
             console.error('Summarize error:', err);
-            // Don't show critical error for summary failure, just log it and maybe show strict text
         } finally {
             setSummarizing(false);
         }
@@ -178,14 +178,9 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                                         </div>
                                     </div>
                                 ) : summary ? (
-                                    <ul className="space-y-3 relative z-10">
-                                        {summary.map((point, i) => (
-                                            <li key={i} className="flex items-start gap-3 text-sm text-zinc-300 leading-relaxed">
-                                                <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0 shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
-                                                {point}
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    <p className="text-zinc-300 text-sm leading-relaxed relative z-10">
+                                        {summary}
+                                    </p>
                                 ) : (
                                     <p className="text-zinc-500 text-sm italic relative z-10">
                                         {loading ? 'Waiting for content...' : 'Could not generate summary.'}
@@ -222,8 +217,8 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                                             <div
                                                 key={msg.id}
                                                 className={`rounded-xl transition-all duration-200 overflow-hidden border ${isExpanded
-                                                        ? 'bg-white/5 border-white/10'
-                                                        : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.05] cursor-pointer'
+                                                    ? 'bg-white/5 border-white/10'
+                                                    : 'bg-white/[0.02] border-white/5 hover:bg-white/[0.05] cursor-pointer'
                                                     }`}
                                                 onClick={() => !isExpanded && toggleMessage(msg.id)}
                                             >

@@ -3,43 +3,42 @@ import { getOpenAIClient } from '@/lib/openai';
 
 export async function POST(req: Request) {
     try {
-        const { emailBody, subject } = await req.json();
+        const body = await req.json();
+        console.log('📥 Summarize request body:', JSON.stringify(body));
+
+        const { emailBody, subject } = body;
 
         if (!emailBody) {
+            console.log('❌ No email body provided');
             return NextResponse.json({ error: 'No email body provided' }, { status: 400 });
         }
 
         const openai = getOpenAIClient();
+        console.log('🤖 Calling OpenAI...');
+
         const response = await openai.chat.completions.create({
             model: 'gpt-4o',
             messages: [
                 {
                     role: 'system',
-                    content: `You are Sage, an elite executive assistant.
-Your Goal: Summarize the provided email thread into 3 distinct, high-value bullet points.
-
-CRITICAL RULES:
-1. **Ignore Noise:** If the thread contains automated bank alerts, newsletters, or system notifications (e.g., HDFC, Naukri), IGNORE them completely unless they are the ONLY content.
-2. **Focus on Business:** Prioritize invoices, scheduling, and human questions.
-3. **Be Specific:** Do not say 'The user sent an email'. Say 'Nikhil sent the invoice'.
-4. **Format:** Return valid JSON: { summary: ['Point 1', 'Point 2', 'Point 3'] }.`,
+                    content: 'You are an email assistant. Summarize emails in 2-3 concise sentences. Mention any action items.'
                 },
                 {
                     role: 'user',
-                    content: `Subject: ${subject || 'No Subject'}\n\n${emailBody}`,
+                    content: `Summarize this email:\n\nSubject: ${subject || 'No Subject'}\n\n${emailBody}`
                 },
             ],
-            response_format: { type: "json_object" },
+            // Removed response_format: { type: "json_object" } to allow free text
         });
 
-        const content = response.choices[0].message.content;
-        if (!content) throw new Error("No content generated");
+        const summary = response.choices[0].message.content || 'Could not generate summary';
+        console.log('✅ Summary generated:', summary);
 
-        const data = JSON.parse(content);
-        return NextResponse.json(data);
+        // Return simple object with scalar string
+        return NextResponse.json({ summary });
 
     } catch (error) {
-        console.error('Summarize error:', error);
+        console.error('❌ Summarize error:', error);
         return NextResponse.json({ error: 'Failed to summarize' }, { status: 500 });
     }
 }
