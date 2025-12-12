@@ -207,9 +207,9 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                                 <Loader2 className="w-4 h-4 animate-spin" />
                                 <span>Generating summary...</span>
                             </div>
-                        ) : summaryData ? (
+                        ) : summaryData && summaryData.summary && summaryData.summary.length > 0 ? (
                             <ul className="space-y-2.5">
-                                {(summaryData.summary || []).map((point: string, i: number) => (
+                                {(summaryData.summary).map((point: string, i: number) => (
                                     <li key={i} className="flex items-start gap-3 text-sm text-zinc-300 leading-relaxed">
                                         <span className="text-amber-500 mt-1.5 w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0 shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
                                         <span>{point}</span>
@@ -217,10 +217,8 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                                 ))}
                             </ul>
                         ) : (
-                            <div className="space-y-2">
-                                <div className="h-4 bg-zinc-800 rounded animate-pulse w-3/4"></div>
-                                <div className="h-4 bg-zinc-800 rounded animate-pulse w-1/2"></div>
-                            </div>
+                            // Fallback or Empty State
+                            <p className="text-sm text-zinc-500 italic">No summary available for this thread.</p>
                         )}
                     </div>
 
@@ -317,19 +315,19 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                     <div className="flex items-center gap-2 mb-3">
                         <button
                             onClick={() => setMode('reply')}
-                            className={`px - 3 py - 1 text - xs font - medium rounded - full transition - colors ${mode === 'reply'
+                            className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${mode === 'reply'
                                 ? 'bg-zinc-800 text-zinc-100 border border-zinc-700'
                                 : 'text-zinc-500 hover:text-zinc-300'
-                                } `}
+                                }`}
                         >
                             Reply
                         </button>
                         <button
                             onClick={() => setMode('ai')}
-                            className={`px - 3 py - 1 text - xs font - medium rounded - full transition - colors ${mode === 'ai'
+                            className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${mode === 'ai'
                                 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20'
                                 : 'text-zinc-500 hover:text-zinc-300'
-                                } `}
+                                }`}
                         >
                             ✨ Ask Sage
                         </button>
@@ -363,10 +361,10 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                         <button
                             onClick={toggleListening}
                             disabled={isAiProcessing}
-                            className={`w - 12 h - 12 rounded - xl flex items - center justify - center transition - all flex - shrink - 0 ${isListening
+                            className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all flex-shrink-0 ${isListening
                                 ? 'bg-emerald-500 text-white animate-pulse shadow-[0_0_15px_rgba(16,185,129,0.5)]'
                                 : 'bg-zinc-800 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-700'
-                                } `}
+                                }`}
                         >
                             {isVoiceProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Mic className="w-5 h-5" />}
                         </button>
@@ -391,12 +389,12 @@ function ActionButton({ icon, label, onClick, variant = 'default' }: { icon: any
         <button
             onClick={onClick}
             className={`
-                flex items - center gap - 2 px - 3 py - 2 rounded - lg text - xs font - medium transition - all
+                flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all
                 ${variant === 'primary'
                     ? 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 border border-emerald-500/20'
                     : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200 border border-transparent'
                 }
-                            `}
+            `}
         >
             {icon}
             {label}

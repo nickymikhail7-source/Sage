@@ -128,35 +128,50 @@ h2 {
 
 /* Email body content styles */
 /* Email body content styles */
+/* Email Body Content - Force readable colors */
 .email-body-content {
-  color: #d4d4d8;
-  font-size: 15px;
-  line-height: 1.65;
+  color: #e4e4e7 !important;
+  /* zinc-200 - always light text */
+  font-size: 14px;
+  line-height: 1.7;
+  background: transparent !important;
   max-width: 100%;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
-.email-body-content p {
-  margin-bottom: 1em;
+/* Override ALL text colors inside email content */
+.email-body-content * {
+  color: inherit !important;
+  background-color: transparent !important;
+  max-width: 100%;
 }
 
-/* Images - Critical styles */
+/* But preserve colored links */
+.email-body-content a {
+  color: #10b981 !important;
+  /* emerald-500 */
+  text-decoration: underline;
+}
+
+.email-body-content a:hover {
+  color: #34d399 !important;
+  /* emerald-400 */
+}
+
+/* Images should keep their backgrounds */
 .email-body-content img {
   max-width: 100% !important;
   height: auto !important;
-  display: inline-block;
-  margin: 8px 0;
-  border-radius: 4px;
+  display: block;
+  margin: 12px auto;
+  border-radius: 8px;
+  background-color: white !important;
+  /* Keep white bg for logos */
 }
 
-/* Handle CID images (embedded images) */
-.email-body-content img[src^="cid:"] {
-  display: none;
-  /* Hide CID images that can't load without backend proxy */
-}
-
-/* Handle tracking pixels - hide them */
+/* Handle CID images and Tracking Pixels */
+.email-body-content img[src^="cid:"],
 .email-body-content img[width="1"],
 .email-body-content img[height="1"],
 .email-body-content img[src*="track"],
@@ -165,65 +180,99 @@ h2 {
   display: none !important;
 }
 
-.email-body-content a {
-  color: #10b981;
-  text-decoration: underline;
-  text-underline-offset: 2px;
+/* Tables - common in HTML emails */
+.email-body-content table {
+  max-width: 100% !important;
+  border-collapse: collapse;
+  background: transparent !important;
+  display: block;
+  overflow-x: auto;
+  margin: 12px 0;
 }
 
-.email-body-content a:hover {
-  color: #34d399;
+.email-body-content td,
+.email-body-content th {
+  color: #e4e4e7 !important;
+  padding: 8px;
+  background: transparent !important;
+  border-color: #3f3f46 !important;
+  /* zinc-700 */
 }
 
-.email-body-content blockquote {
-  border-left: 3px solid #f59e0b;
-  padding-left: 16px;
-  margin: 16px 0;
-  color: #a1a1aa;
-  font-style: italic;
+/* Headers */
+.email-body-content h1,
+.email-body-content h2,
+.email-body-content h3,
+.email-body-content h4,
+.email-body-content h5,
+.email-body-content h6 {
+  color: #fafafa !important;
+  /* zinc-50 - brighter for headings */
+  margin-top: 1em;
+  margin-bottom: 0.5em;
 }
 
+/* Paragraphs */
+.email-body-content p {
+  margin-bottom: 1em;
+  color: #e4e4e7 !important;
+}
+
+/* Lists */
 .email-body-content ul,
 .email-body-content ol {
   padding-left: 24px;
   margin-bottom: 1em;
+  color: #e4e4e7 !important;
 }
 
 .email-body-content li {
   margin-bottom: 4px;
+  color: #e4e4e7 !important;
 }
 
-.email-body-content table {
-  max-width: 100%;
-  overflow-x: auto;
-  display: block;
-  border-collapse: collapse;
-  margin: 12px 0;
+/* Blockquotes */
+.email-body-content blockquote {
+  border-left: 3px solid #f59e0b;
+  padding-left: 16px;
+  margin: 16px 0;
+  color: #a1a1aa !important;
+  font-style: italic;
 }
 
-.email-body-content th,
-.email-body-content td {
-  padding: 8px 12px;
-  border: 1px solid #27272a;
-  text-align: left;
-}
-
+/* Pre-formatted text */
 .email-body-content pre,
 .email-body-content code {
-  background: #18181b;
-  border-radius: 4px;
+  background: #27272a !important;
+  color: #e4e4e7 !important;
   padding: 2px 6px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
+  border-radius: 4px;
+  font-family: monospace;
 }
 
-.email-body-content pre {
-  padding: 12px;
-  overflow-x: auto;
+/* HR dividers */
+.email-body-content hr {
+  border: none;
+  border-top: 1px solid #3f3f46;
+  margin: 16px 0;
 }
 
-.email-body-content * {
-  max-width: 100%;
+/* Force white background for email wrapper divs that contain images/logos */
+.email-body-content>table,
+.email-body-content>div>table {
+  background: transparent !important;
+}
+
+/* Special handling for email templates with colored backgrounds */
+.email-body-content [style*="background"] {
+  background: transparent !important;
+}
+
+/* But keep image containers that might need white bg */
+.email-body-content [style*="background"] img {
+  background: white !important;
+  padding: 8px;
+  border-radius: 8px;
 }
 
 /* Animations */

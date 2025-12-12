@@ -12,10 +12,13 @@ export function EmailBodyRenderer({ html, className = '' }: EmailBodyRendererPro
 
     useEffect(() => {
         if (containerRef.current && html) {
-            // Basic client-side sanitization could happen here if not strict enough
-            // For now, we trust the input but ensure styles allow images
-            const sanitized = sanitizeEmailHtml(html);
-            containerRef.current.innerHTML = sanitized;
+            // Process HTML to ensure readability on dark background
+            let processed = processEmailHtml(html);
+
+            // Basic sanitization
+            processed = sanitizeEmailHtml(processed);
+
+            containerRef.current.innerHTML = processed;
 
             // Post-process images
             const images = containerRef.current.querySelectorAll('img');
@@ -44,6 +47,27 @@ export function EmailBodyRenderer({ html, className = '' }: EmailBodyRendererPro
             className={`email-body-content ${className}`}
         />
     );
+}
+
+function processEmailHtml(html: string): string {
+    // Remove inline color styles that conflict with dark theme
+    let processed = html;
+
+    // Remove color attributes (but not on images)
+    processed = processed.replace(/(<(?!img)[^>]*)\scolor="[^"]*"/gi, '$1');
+
+    // Remove bgcolor attributes (but preserve on images)
+    processed = processed.replace(/(<(?!img)[^>]*)\sbgcolor="[^"]*"/gi, '$1');
+
+    // Remove style="color:..." patterns
+    processed = processed.replace(/style="([^"]*)color:\s*#[0-9a-fA-F]{3,6}([^"]*)"/gi, 'style="$1$2"');
+    processed = processed.replace(/style="([^"]*)color:\s*rgb\([^)]+\)([^"]*)"/gi, 'style="$1$2"');
+    processed = processed.replace(/style="([^"]*)color:\s*[a-z]+([^"]*)"/gi, 'style="$1$2"');
+
+    // Remove background-color styles (but not background-image)
+    processed = processed.replace(/style="([^"]*)background-color:\s*[^;]+;?([^"]*)"/gi, 'style="$1$2"');
+
+    return processed;
 }
 
 function sanitizeEmailHtml(html: string): string {
