@@ -178,7 +178,7 @@ export function ThreadView({ threadId, accessToken, onClose }: ThreadViewProps) 
                                         </div>
                                     </div>
                                 ) : summary ? (
-                                    <p className="text-zinc-300 text-sm leading-relaxed relative z-10">
+                                    <p className="text-zinc-300 text-sm leading-relaxed relative z-10 whitespace-pre-wrap">
                                         {summary}
                                     </p>
                                 ) : (

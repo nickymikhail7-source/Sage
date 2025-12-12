@@ -17,18 +17,23 @@ export async function POST(req: Request) {
         console.log('🤖 Calling OpenAI...');
 
         const response = await openai.chat.completions.create({
-            model: 'gpt-4o',
+            model: 'gpt-4o-mini',
             messages: [
                 {
                     role: 'system',
-                    content: 'You are an email assistant. Summarize emails in 2-3 concise sentences. Mention any action items.'
+                    content: `You are an email assistant. Summarize emails in EXACTLY 3 bullet points:
+- Point 1: What is this email about (one sentence)
+- Point 2: Key information or details (one sentence)
+- Point 3: Action required or next steps (or "No action required")
+
+Always use bullet points (•). Keep each point under 15 words. Be concise.`
                 },
                 {
                     role: 'user',
                     content: `Summarize this email:\n\nSubject: ${subject || 'No Subject'}\n\n${emailBody}`
                 },
             ],
-            // Removed response_format: { type: "json_object" } to allow free text
+            max_tokens: 200,
         });
 
         const summary = response.choices[0].message.content || 'Could not generate summary';
