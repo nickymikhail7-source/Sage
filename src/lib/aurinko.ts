@@ -35,6 +35,7 @@ export async function getThreadMessages(accessToken: string, threadId: string) {
         const response = await axios.get('https://api.aurinko.io/v1/email/messages', {
             params: {
                 returnBody: true,
+                bodyType: 'html',
                 limit: 50 // Fetch enough to find the thread
             },
             headers: { Authorization: `Bearer ${accessToken}` }
