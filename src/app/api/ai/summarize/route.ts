@@ -1,9 +1,5 @@
 import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
-
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+import { getOpenAIClient } from '@/lib/openai';
 
 export async function POST(req: Request) {
     try {
@@ -13,6 +9,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'No email body provided' }, { status: 400 });
         }
 
+        const openai = getOpenAIClient();
         const response = await openai.chat.completions.create({
             model: 'gpt-4o',
             messages: [

@@ -1,10 +1,7 @@
-import OpenAI from 'openai';
-
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+import { getOpenAIClient } from '@/lib/openai';
 
 export async function transcribeAudio(file: File) {
+    const openai = getOpenAIClient();
     const response = await openai.audio.transcriptions.create({
         file: file,
         model: 'whisper-1',
@@ -13,6 +10,7 @@ export async function transcribeAudio(file: File) {
 }
 
 export async function generateDraft(prompt: string) {
+    const openai = getOpenAIClient();
     const response = await openai.chat.completions.create({
         model: 'gpt-4o',
         messages: [
